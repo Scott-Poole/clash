@@ -1,6 +1,7 @@
 import {Game} from './game.js';
 
 let game = new Game();
+game.init();
 
 let canvas = document.getElementById('mainCanvas');
 let ctx = canvas.getContext('2d');
@@ -17,6 +18,8 @@ let mouseX = -1;
 let mouseY = -1;
 let clickX = -1;
 let clickY = -1;
+
+let selectedCard = -1;
 
 //set canvas position and size
 let fit = function(){
@@ -56,8 +59,8 @@ let draw = function(time){
 			ctx.fillRect(i*cardWidth, gridHeight*gridDim, cardWidth, cardHeight);
 		}
 		//selected
-		if(game.player.selectedCard == i){
-			ctx.fillStyle = game.player.playable[game.player.selectedCard].color;
+		if(selectedCard == i){
+			ctx.fillStyle = game.player.playable[selectedCard].color;
 			ctx.fillRect(i*cardWidth, gridHeight*gridDim, cardWidth, cardHeight);
 		}
 		//non-selected
@@ -73,7 +76,12 @@ let draw = function(time){
 	//entities
 	for(let i = 0; i < game.entities.length; i++){
 		ctx.fillStyle = game.entities[i].color;
-		ctx.fillRect(game.entities[i].x - (gridDim/2), game.entities[i].y - (gridDim/2), gridDim, gridDim);
+		ctx.fillRect(
+			game.entities[i].x*gridDim - (game.entities[i].w*gridDim/2), 
+			game.entities[i].y*gridDim - (game.entities[i].h*gridDim/2), 
+			game.entities[i].w*gridDim, 
+			game.entities[i].h*gridDim
+		);
 	}
 	
 	window.requestAnimationFrame(draw);
@@ -88,13 +96,18 @@ window.addEventListener('click',e=>{
 	//play card
 	if(clickX >= 0 && clickX <= gridWidth*gridDim &&
 	clickY >= 0 && clickY <= gridHeight*gridDim){
-		game.input({type:'play', x:clickX, y:clickY});
+		game.input({
+			type:'play',i:selectedCard,
+			x:Math.floor(clickX/gridDim),
+			y:Math.floor(clickY/gridDim),
+		});
+		selectedCard = -1;
 	}
 	
-	//select card
+	//set selected card
 	else if(clickX >= 0 && clickX <= gridWidth*gridDim &&
 	clickY >= gridHeight*gridDim && clickY <= gridHeight*gridDim+cardHeight){
-		game.input({type:'select', i:Math.floor(clickX/cardWidth)});
+		selectedCard = Math.floor(clickX/cardWidth);
 	}
 	
 });
