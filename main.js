@@ -4,6 +4,7 @@ let game = new Game();
 
 let canvas = document.getElementById('mainCanvas');
 let ctx = canvas.getContext('2d');
+let msg = document.getElementById('dump');
 
 const gridWidth = game.width;
 const gridHeight = game.height;
@@ -34,6 +35,8 @@ let draw = function(t){
 	let dt = t - oldT;
 	oldT = t;
 	
+	//msg.innerHTML = 'dt: '+dt;
+	
 	//update game
 	game.update(dt);
 	
@@ -45,7 +48,7 @@ let draw = function(t){
 	for(let j = 0; j < game.board.length; j++){
 		for(let i = 0; i < game.board[0].length; i++){
 			//barrier
-			if(game.board[j][i] == 1){
+			if(game.board[j][i] == 0){
 				ctx.fillStyle = '#59473e';
 				ctx.fillRect(i*gridDim, j*gridDim, gridDim, gridDim);
 			}
@@ -92,14 +95,18 @@ let draw = function(t){
 	}
 	
 	//entities
+	ctx.font = "20px Georgia";
 	for(let i = 0; i < game.entities.length; i++){
 		ctx.fillStyle = game.entities[i].color;
 		ctx.fillRect(
-			game.entities[i].x*gridDim - (game.entities[i].w*gridDim/2), 
-			game.entities[i].y*gridDim - (game.entities[i].h*gridDim/2), 
-			game.entities[i].w*gridDim, 
-			game.entities[i].h*gridDim
+			game.entities[i].x*gridDim - (game.entities[i].r*gridDim), 
+			game.entities[i].y*gridDim - (game.entities[i].r*gridDim), 
+			game.entities[i].r*2*gridDim, 
+			game.entities[i].r*2*gridDim
 		);
+		if(game.entities[i].state){
+			ctx.fillText(game.entities[i].state+': '+game.entities[i].health, game.entities[i].x*gridDim, game.entities[i].y*gridDim);
+		}
 	}
 	
 	window.requestAnimationFrame(draw);

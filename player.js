@@ -1,5 +1,5 @@
 import {Card} from './card.js';
-//import {Troop} from './troop.js';
+import {MeleeGroundUnit} from './meleeGroundUnit.js';
 
 class Player{
 	constructor(game/*deck*/){
@@ -14,7 +14,8 @@ class Player{
 			let played = this.playable[i];
 			this.playable[i] = this.rest.shift();
 			this.rest.push(played);
-			//this.game.entities.push(new Troop(x+0.5,y+0.5,played.color));
+			let t = Math.round(Math.random());
+			this.game.entities.push(new MeleeGroundUnit(this.game,x+0.5,y+0.5,t));
 		}
 	}
 }

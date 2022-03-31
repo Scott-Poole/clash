@@ -1,12 +1,16 @@
 class Entity{
-	constructor(game,x,y,r,team,color){
+	constructor(game,x,y,team){
 		this.game = game;
 		this.x = x;
 		this.y = y;
-		this.r = r;
-		this.rS = this.r*this.r;
 		this.team = team;
-		this.color = color;
+		
+		this.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+		this.r = 1;
+		this.dead = false;
+		this.state='idle';
+		this.health=0;
+		this.mass=99999;
 	}
 	
 	update(dt){
