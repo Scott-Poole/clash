@@ -14,8 +14,8 @@ class Player{
 			let played = this.playable[i];
 			this.playable[i] = this.rest.shift();
 			this.rest.push(played);
-			let t = Math.round(Math.random());
-			this.game.entities.push(new MeleeGroundUnit(this.game,x+0.5,y+0.5,t));
+			//let t = Math.round(Math.random());
+			this.game.entities.push(new MeleeGroundUnit(this.game,x+0.5,y+0.5,1));
 		}
 	}
 }

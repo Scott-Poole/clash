@@ -1,6 +1,43 @@
 import {Entity} from './entity.js';
 import {astar,Graph} from './astar.js';
 
+const ground = [
+[999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999], 
+[999, 999, 999, 999, 999, 999, 999, 1.1, 1.1, 20.1, 20.1, 1.1, 1.1, 999, 999, 999, 999, 999, 999, 999], 
+[999, 1.4, 1.2, 1.2, 1.2, 1.2, 1.2, 1.1, 1.0, 1.0, 1.0, 1.0, 1.1, 1.2, 1.2, 1.2, 1.2, 1.2, 1.4, 999], 
+[999, 1.4, 1.2, 1.1, 1.1, 1.1, 1.1, 1.1, 1.0, 1.0, 1.0, 1.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.2, 1.4, 999], 
+[999, 1.2, 1.2, 1.1, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.1, 1.2, 1.2, 999], 
+[999, 1.2, 1.1, 1.1, 1.0, 1.1, 1.1, 1.1, 1.0, 1.0, 1.0, 1.0, 1.1, 1.1, 1.1, 1.0, 1.1, 1.1, 1.2, 999], 
+[999, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 999], 
+[999, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 999], 
+[999, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 1.4, 1.4, 1.4, 1.4, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 999], 
+[999, 1.2, 1.1, 1.1, 1.0, 1.1, 1.1, 1.2, 1.4, 1.8, 1.8, 1.4, 1.2, 1.1, 1.1, 1.0, 1.1, 1.1, 1.2, 999], 
+[999, 1.2, 1.2, 1.1, 1.0, 1.1, 1.2, 1.2, 1.4, 1.8, 1.8, 1.4, 1.2, 1.2, 1.1, 1.0, 1.1, 1.2, 1.2, 999], 
+[999, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.4, 1.8, 1.8, 1.4, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 999], 
+[999, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.8, 1.8, 1.8, 1.8, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 999], 
+[999, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.8, 1.4, 1.4, 1.8, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 999], 
+[999, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.8, 1.4, 1.4, 1.8, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 999], 
+[999, 999, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.8, 1.4, 1.4, 1.8, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 999, 999], 
+[999, 999, 999, 1.1, 1.0, 1.1, 999, 999, 999, 999, 999, 999, 999, 999, 1.1, 1.0, 1.1, 999, 999, 999],
+[999, 999, 999, 1.1, 1.0, 1.1, 999, 999, 999, 999, 999, 999, 999, 999, 1.1, 1.0, 1.1, 999, 999, 999], 
+[999, 999, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.8, 1.4, 1.4, 1.8, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 999, 999], 
+[999, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.8, 1.4, 1.4, 1.8, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 999], 
+[999, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.8, 1.4, 1.4, 1.8, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 999], 
+[999, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.8, 1.8, 1.8, 1.8, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 999], 
+[999, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 1.4, 1.8, 1.8, 1.4, 1.4, 1.2, 1.1, 1.0, 1.1, 1.2, 1.4, 999], 
+[999, 1.2, 1.2, 1.1, 1.0, 1.1, 1.2, 1.2, 1.4, 1.8, 1.8, 1.4, 1.2, 1.2, 1.1, 1.0, 1.1, 1.2, 1.2, 999], 
+[999, 1.2, 1.1, 1.1, 1.0, 1.1, 1.1, 1.2, 1.4, 1.8, 1.8, 1.4, 1.2, 1.1, 1.1, 1.0, 1.1, 1.1, 1.2, 999], 
+[999, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 1.4, 1.4, 1.4, 1.4, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 999], 
+[999, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 999], 
+[999, 1.2, 1.1, 1.0, 1.0, 1.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.0, 1.0, 1.0, 1.1, 1.2, 999], 
+[999, 1.2, 1.1, 1.1, 1.0, 1.1, 1.1, 1.1, 1.0, 1.0, 1.0, 1.0, 1.1, 1.1, 1.1, 1.0, 1.1, 1.1, 1.2, 999], 
+[999, 1.2, 1.2, 1.1, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.1, 1.2, 1.2, 999], 
+[999, 1.4, 1.2, 1.1, 1.1, 1.1, 1.1, 1.1, 1.0, 1.0, 1.0, 1.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.2, 1.4, 999], 
+[999, 1.4, 1.2, 1.2, 1.2, 1.2, 1.2, 1.1, 1.0, 1.0, 1.0, 1.0, 1.1, 1.2, 1.2, 1.2, 1.2, 1.2, 1.4, 999], 
+[999, 999, 999, 999, 999, 999, 999, 1.1, 1.1, 20.1, 20.1, 1.1, 1.1, 999, 999, 999, 999, 999, 999, 999], 
+[999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999], 
+];
+
 class MeleeGroundUnit extends Entity{
 	constructor(game,x,y,team){
 		super(game,x,y,team);
@@ -90,14 +127,23 @@ class MeleeGroundUnit extends Entity{
 		}
 		//move away from overlapping entities
 		for(let i = 0; i < this.game.entities.length; i++){
-			if(this != this.game.entities[i] && this.distBetween(this.game.entities[i]) < 0 && this.mass <= this.game.entities[i].mass){
-				this.move(this.x - this.game.entities[i].x, this.y - this.game.entities[i].y, dt);
-				this.state = 'moving';
-				return;
+			if(this != this.game.entities[i]){
+				
+				if(this.x == this.game.entities[i].x && this.y == this.game.entities[i].y){
+					this.move(Math.random()-Math.random(), Math.random()-Math.random(), dt);
+					this.state = 'moving';
+					return;
+				}
+				else if(this.distBetween(this.game.entities[i]) < 0 && this.mass <= this.game.entities[i].mass){
+					this.move(this.x - this.game.entities[i].x, this.y - this.game.entities[i].y, dt);
+					this.state = 'moving';
+					return;
+				}
+				
 			}
 		}
-		
 		//reset nearest target
+		this.updateGraph();
 		
 		let dist = 99999;
 		let nearestTarget = null;
@@ -107,9 +153,9 @@ class MeleeGroundUnit extends Entity{
 		for(let i = 0; i < this.game.entities.length; i++){
 			if(this.game.entities[i].team != this.team && !this.game.entities[i].dead){
 				let d = this.distBetween(this.game.entities[i]);
-				let start = this.game.groundGraph.grid[Math.floor(this.y)][Math.floor(this.x)];
-				let end = this.game.groundGraph.grid[Math.floor(this.game.entities[i].y)][Math.floor(this.game.entities[i].x)];
-				let res = astar.search(this.game.groundGraph, start, end, { heuristic: astar.heuristics.diagonal });
+				let start = this.graph.grid[Math.floor(this.y)][Math.floor(this.x)];
+				let end = this.graph.grid[Math.floor(this.game.entities[i].y)][Math.floor(this.game.entities[i].x)];
+				let res = astar.search(this.graph, start, end, { heuristic: astar.heuristics.diagonal });
 				
 				if(res.length > 0){
 					//console.log('res good');
@@ -165,6 +211,76 @@ class MeleeGroundUnit extends Entity{
 		this.x += x*norm*dt*this.speed;
 		this.y += y*norm*dt*this.speed;
 		
+	}
+	
+	updateGraph(){
+		//ground graphs
+		let filledWeight = 9.0;
+		let grid = [];
+		for(let i = 0; i< ground.length; i++){
+			grid[i] = [];
+			for(let j = 0; j < ground[0].length; j++){
+				grid[i][j] = ground[i][j];
+			}
+		}
+		for(let i = 0; i< this.game.entities.length; i++){
+			if(this == this.game.entities[i])
+				continue;
+			
+			let left = this.game.entities[i].x-this.game.entities[i].r;
+			let right = this.game.entities[i].x+this.game.entities[i].r;
+			let up = this.game.entities[i].y-this.game.entities[i].r;
+			let down = this.game.entities[i].y+this.game.entities[i].r;
+			let x1 = Math.floor(left);
+			let y1 = Math.floor(up);
+			let x2 = Math.floor(right);
+			let y2 = Math.floor(down);
+			
+			//all in one
+			if(x1 == x2 && y1 == y2){
+				grid[y1][x1] += filledWeight*(right-left)*(down-up);
+			}
+			
+			//horizontal
+			if(x1 < x2 && y1 == y2){
+				let h = down-up;
+				grid[y1][x1] += filledWeight*(1-(left-x1))*h;
+				grid[y1][x2] += filledWeight*(right-x2)*h;
+			}
+			
+			//vertical
+			if(x1 == x2 && y1 < y2){
+				let w = right-left;
+				grid[y1][x1] += filledWeight*(1-(up-y1))*w;
+				grid[y2][x1] += filledWeight*(down-y2)*w;
+			}
+			
+			//outer edges/corners
+			if(x1 < x2 && y1 < y2){
+				grid[y1][x1] += filledWeight*(1-(left-x1))*(1-(up-y1));//tl
+				grid[y2][x2] += filledWeight*(right-x2)*(down-y2);//br
+				grid[y1][x2] += filledWeight*(right-x2)*(1-(up-y1));//tr
+				grid[y2][x1] += filledWeight*(1-(left-x1))*(down-y2);//bl
+				for(let x = x1+1; x < x2; x++){
+					grid[y1][x] += filledWeight*(1-(up-y1));
+					grid[y2][x] += filledWeight*(down-y2);
+				}
+				for(let y = y1+1; y < y2; y++){
+					grid[y][x1] += filledWeight*(1-(left-x1));
+					grid[y][x2] += filledWeight*(right-x2);
+				}
+			}
+			
+			//inner
+			for(let x = x1+1; x < x2; x++){
+				for(let y = y1+1; y < y2; y++){
+					grid[y][x] += filledWeight;
+				}
+			}
+			
+		}		
+		
+		this.graph = new Graph(grid, { diagonal: true });
 	}
 	
 }

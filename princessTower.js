@@ -23,7 +23,7 @@ class PrincessTower extends SingleTargetBuilding{
 		
 		//override Enitity
 		this.color = '#b8a365';
-		this.r = 1.51;
+		this.r = 1.5;
 		//this.dead = false;
 		//this.state = 'idle';
 		//this.health = this.maxHealth;

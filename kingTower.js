@@ -23,7 +23,7 @@ class KingTower extends SingleTargetBuilding{
 		
 		//override Enitity
 		this.color = '#e8c764';
-		this.r = 2.01;
+		this.r = 2.0;
 		//this.dead = false;
 		//this.state = 'idle';
 		//this.health = this.maxHealth;
